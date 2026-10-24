@@ -48,6 +48,27 @@ So point testers at the solo flows — the wheel, filters, challenges, a bracket
 
 ---
 
+## Backend status (Supabase)
+
+The v2 groundwork is in place: the database, the security rules and the server-side write paths are defined. The app UI is **not** wired to them yet, so it still runs as a single-device local demo until you connect a project.
+
+- `supabase/schema.sql` — profiles, friends, lobbies, members, nominations and votes, chat, catalog, matches, XP events, achievements, tournaments and party-game sessions, with Row Level Security on every table.
+- The same file makes the client unable to write XP, wins, lobby membership, votes or bracket scores directly. All of it goes through `SECURITY DEFINER` functions that check who is calling: `create_lobby`, `join_lobby`, `set_ready`, `leave_lobby`, `kick_member`, `transfer_host`, `close_lobby`, `nominate_game`, `cast_vote`, `finalize_vote`, `send_message`, `log_match`, `complete_challenge`, `report_tournament_match`, `submit_party_answer`, plus an internal `award_xp` that a unique key stops from paying the same activity twice.
+- `supabase/seed.sql` — the curated catalog with official publisher links. Prices are only present where a title is genuinely free to play; everything else is `NULL` rather than invented.
+- `js/config.js` — where the project URL and anon key go.
+
+**To connect it:** follow [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for the click-by-click version with screenshots-in-words, or the short form:
+
+1. Create a project at supabase.com (the free tier is enough).
+2. SQL editor: run `supabase/schema.sql`, then `supabase/seed.sql`.
+3. Project Settings → API: copy the **Project URL** and the **anon public** key into `js/config.js`. The anon key is public by design and limited by RLS — never paste the `service_role` key into frontend code.
+4. Authentication → Providers: enable Email, and turn off "Confirm email" while testing so sign-ups can sign in immediately.
+5. Realtime is already published for `lobbies`, `lobby_members`, `lobby_messages`, `lobby_votes`, `lobby_nominations`, `party_sessions` and `tournament_matches`.
+
+See `ROADMAP.md` for what is done, what is next and what is still missing.
+
+---
+
 ## What works today
 
 Everything below is real, interactive and persisted locally. There is no fake button: anything that is only a preview is labelled **demo** in the UI.
