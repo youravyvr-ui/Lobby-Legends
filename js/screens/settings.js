@@ -114,6 +114,22 @@
       "</section>" +
 
       '<section class="card">' +
+      '<div class="between"><h2 style="font-size:1rem">Backend</h2>' +
+      (LL.backend.configured() ? UI.badge("Configured", "neon", "check") : UI.badge("Not configured", "orange", "database")) + "</div>" +
+      '<div class="row-item" style="margin-top:10px">' + UI.icon("database", "accent") +
+      '<div class="row-main"><b id="backend-state">' +
+      (LL.backend.configured() ? "Supabase project set" : "Running on this device only") + "</b>" +
+      '<span id="backend-detail">' +
+      (LL.backend.configured()
+        ? "Tap Check connection to verify it answers."
+        : "Accounts and shared lobbies need a project — see SUPABASE_SETUP.md.") +
+      "</span></div></div>" +
+      (LL.backend.configured()
+        ? '<button type="button" class="btn btn-sm btn-line btn-block" style="margin-top:10px" data-act="settings:checkBackend">' + UI.icon("refresh") + "Check connection</button>"
+        : "") +
+      "</section>" +
+
+      '<section class="card">' +
       '<h2 style="font-size:1rem">About this build</h2>' +
       '<div class="stack-sm" style="margin-top:10px">' +
       [
@@ -205,6 +221,18 @@
     UI.closeModal();
     S.reset();
     LL.app.nav("#/home");
+  };
+
+  LL.actions["settings:checkBackend"] = function () {
+    const state = document.getElementById("backend-state");
+    const detail = document.getElementById("backend-detail");
+    if (state) state.textContent = "Checking…";
+    if (detail) detail.textContent = "Contacting " + LL.backend.url();
+    LL.backend.check().then(function (res) {
+      if (state) state.textContent = res.ok ? "Connected" : "Could not connect";
+      if (detail) detail.textContent = res.detail || "";
+      UI.toast(res.ok ? "Supabase answered" : "Supabase did not answer", res.ok ? "ok" : "err");
+    });
   };
 
   LL.screens.settings = { render: render };
