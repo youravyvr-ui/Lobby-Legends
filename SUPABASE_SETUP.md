@@ -53,7 +53,7 @@ If you instead see a `permission denied for table catalog_games` error, you are 
 **Project Settings** (gear icon) → **API**:
 
 - **Project URL** — looks like `https://abcdefghijkl.supabase.co`
-- **Project API keys → `anon` / `public`** — a long `eyJ…` string.
+- **Project API keys → `anon` / `public`** — either the newer `sb_publishable_…` key or the legacy `eyJ…` anon key. Both are safe in a browser.
 
 The `anon` key is **meant to be public**. It only lets the browser do what the RLS policies in the schema allow. Never copy the `service_role` key into the app — that one bypasses RLS and belongs only on a server.
 

@@ -12,8 +12,8 @@
  * this device only, and the UI says so.
  */
 window.LL_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://lmyqemnhmklfovkhbojd.supabase.co",
+  supabaseAnonKey: "sb_publishable_XQb16j0UvsKwyyx9RW-Oag_TfemUGQy",
   /* How much data to pull for leaderboards. Keep it small on the free tier. */
   leaderboardLimit: 100
 };
